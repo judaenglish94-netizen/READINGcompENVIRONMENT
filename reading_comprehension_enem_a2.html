@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Comprehension Enem A2 - Innovation & Pollution</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            tech: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar styling for the passage box */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    
+    /* Mandatory font size 14px for reading text */
+    .reading-text {
+      font-size: 14px !important;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-tech-600 to-brand-500 flex items-center justify-center text-white shadow-md">
+          <i class="fa-solid fa-leaf text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-slate-900 leading-tight">Enem English Prep: Reading Comprehension</h1>
+          <p class="text-xs text-slate-500">Level: CEFR A2 (Challenging) • Tech & Environment</p>
+        </div>
+      </div>
+      
+      <!-- Overall Progress Badge -->
+      <div class="flex items-center space-x-4">
+        <div class="hidden sm:flex flex-col items-end">
+          <span class="text-xs text-slate-500 font-medium">Quiz Progress</span>
+          <span id="progress-text" class="text-sm font-bold text-tech-700">0 / 10 Answered</span>
+        </div>
+        <div class="w-32 bg-slate-200 rounded-full h-2.5 overflow-hidden">
+          <div id="progress-bar" class="bg-gradient-to-r from-tech-500 to-brand-500 h-2.5 rounded-full w-0 transition-all duration-300"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-6">
+    
+    <!-- LEFT SIDEBAR: Question Navigator -->
+    <aside class="w-full lg:w-64 bg-white rounded-2xl p-4 shadow-sm border border-slate-200 shrink-0 h-fit">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+        <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-tech-600"></i> Questions List
+        </h2>
+        <span id="score-badge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
+          Score: 0/10
+        </span>
+      </div>
+
+      <!-- Question Grid Menu -->
+      <div id="question-grid" class="grid grid-cols-5 lg:grid-cols-2 gap-2">
+        <!-- Buttons rendered dynamically via JS -->
+      </div>
+
+      <div class="mt-5 pt-3 border-t border-slate-100 text-xs text-slate-500 flex flex-col gap-1.5">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-slate-100 border border-slate-300 inline-block"></span> Not Attempted
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> Correct Answer
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span> Incorrect Answer
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER & RIGHT CONTENT AREA -->
+    <div class="flex-1 flex flex-col lg:flex-row gap-6">
+      
+      <!-- READING PASSAGE BOX (Fixed with scrollbar, 14px font size) -->
+      <section class="w-full lg:w-1/2 bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 flex flex-col max-h-[600px]">
+        <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2 text-slate-800 font-semibold">
+            <i class="fa-solid fa-book-open text-brand-600"></i>
+            <span>Support Text (Enem Style)</span>
+          </div>
+          <span class="text-xs font-medium px-2 py-1 bg-tech-50 text-tech-700 border border-tech-100 rounded-md">
+            Font Size: 14px
+          </span>
+        </div>
+
+        <h2 class="text-base font-bold text-slate-900 mb-3">
+          Modern Innovation and the Environmental Challenge: Can Technology Save the Planet?
+        </h2>
+
+        <!-- Scrollable Text Box -->
+        <div class="reading-text custom-scrollbar overflow-y-auto pr-3 text-slate-700 text-justify space-y-4 border-l-2 border-brand-500 pl-4 bg-slate-50/50 py-2 rounded-r-lg">
+          <p>
+            In recent decades, modern technological innovation has completely transformed human life, bringing faster communication, efficient transportation, and unprecedented global economic growth. <strong>However</strong>, this rapid progress created a dangerous environmental issue: pollution. Today, millions of smartphones, computers, and electronic gadgets become toxic waste (e-waste) every year. <strong>Furthermore</strong>, factories use immense amounts of fossil fuel energy to produce these modern tools, releasing carbon emissions that directly accelerate global warming.
+          </p>
+          <p>
+            <strong>Therefore</strong>, many researchers argue that technology itself must provide the answer to this critical ecological crisis. <em>For instance</em>, eco-friendly innovations like solar panels, wind turbines, and electric vehicles prove that modern science can operate with green energy. Companies are also developing recycling technologies that extract valuable metals from old electronics without harming the atmosphere. These green solutions show that innovation and environmental protection can exist together when sustainable development becomes a real priority for governments and international corporations.
+          </p>
+          <p>
+            In conclusion, humanity cannot simply stop technological progress, but we must urgently transform how we design, buy, and reuse high-tech devices. To avoid catastrophic environmental damage, governments should establish strict environmental laws and support clean energy research. At the same time, consumers must reduce unnecessary electronic consumption and practice recycling. Only through responsible technology and collective human effort can society achieve long-term sustainable growth without destroying our natural home.
+          </p>
+        </div>
+      </section>
+
+      <!-- QUIZ QUESTION PANEL -->
+      <section class="w-full lg:w-1/2 bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+        
+        <div>
+          <!-- Question Header -->
+          <div class="flex items-center justify-between mb-4">
+            <span id="question-number" class="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-tech-100 text-tech-800 rounded-full">
+              Question 1 of 10
+            </span>
+            <span id="status-pill" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500">
+              Unanswered
+            </span>
+          </div>
+
+          <!-- Question Text -->
+          <h3 id="question-text" class="text-base sm:text-lg font-semibold text-slate-900 mb-5 leading-snug">
+            Loading question...
+          </h3>
+
+          <!-- Options Container -->
+          <div id="options-container" class="space-y-2.5 mb-6">
+            <!-- Dynamic Options (A-E) -->
+          </div>
+
+          <!-- Justification / Feedback Box -->
+          <div id="feedback-box" class="hidden p-4 rounded-xl border mb-6 text-sm leading-relaxed transition-all duration-200">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Controls & Navigation -->
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+          <button id="btn-prev" onclick="navigateQuestion(-1)" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 active:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2">
+            <i class="fa-solid fa-chevron-left"></i> Previous
+          </button>
+
+          <button id="btn-check" onclick="checkAnswer()" class="px-5 py-2 text-xs sm:text-sm font-semibold rounded-xl text-white bg-tech-600 hover:bg-tech-700 active:bg-tech-800 shadow-sm disabled:opacity-50 transition flex items-center gap-2">
+            <i class="fa-solid fa-circle-check"></i> Check
+          </button>
+
+          <button id="btn-next" onclick="navigateQuestion(1)" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 active:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2">
+            Next <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Correct Answers Map across questions:
+    // Q1: D (index 3)
+    // Q2: A (index 0)
+    // Q3: E (index 4)
+    // Q4: B (index 1)
+    // Q5: C (index 2)
+    // Q6: A (index 0)
+    // Q7: E (index 4)
+    // Q8: D (index 3)
+    // Q9: B (index 1)
+    // Q10: C (index 2)
+    // Total Distribution: A: 2, B: 2, C: 2, D: 2, E: 2 (Completely distributed & randomized!)
+
+    const questionsData = [
+      {
+        id: 1,
+        question: "According to the first paragraph, what main environmental issue has been directly caused by rapid technological progress?",
+        options: [
+          "The complete loss of global economic growth across all continents.",
+          "The immediate destruction of all renewable energy installations.",
+          "The total reduction of international human communication systems.",
+          "The accumulation of toxic e-waste and dangerous carbon emissions.",
+          "The increase in prices for traditional agricultural products."
+        ],
+        correct: 3, // D
+        justification: "A alternativa correta é a D. O primeiro parágrafo destaca que o progresso acelerado gerou lixo eletrônico tóxico ('toxic waste') e emissões de carbono ('carbon emissions') decorrentes do uso de combustíveis fósseis pelas indústrias."
+      },
+      {
+        id: 2,
+        question: "In the sentence 'However, this rapid progress created a dangerous environmental issue...', the word 'However' expresses an idea of:",
+        options: [
+          "Contrast or opposition.",
+          "Addition of similar points.",
+          "Cause and consequence.",
+          "Chronological time sequence.",
+          "Condition or hypothesis."
+        ],
+        correct: 0, // A
+        justification: "A alternativa correta é a A. O conectivo 'However' significa 'No entanto' ou 'Porém', sendo utilizado para introduzir uma ideia de contraste/oposição entre os benefícios da tecnologia e os impactos ambientais."
+      },
+      {
+        id: 3,
+        question: "What argument do researchers present in the second paragraph regarding technology and the environment?",
+        options: [
+          "Factories should increase their usage of coal and oil immediately.",
+          "Governments must ban all electronic devices worldwide.",
+          "Corporations ought to stop investing in green energy research.",
+          "Developing nations should handle all global electronic waste.",
+          "Technology itself must offer sustainable solutions to solve the crisis."
+        ],
+        correct: 4, // E
+        justification: "A alternativa correta é a E. O segundo parágrafo afirma explicitamente que 'technology itself must provide the answer to this critical ecological crisis', defendendo o uso da própria tecnologia para criar soluções sustentáveis."
+      },
+      {
+        id: 4,
+        question: "In the second paragraph, solar panels, wind turbines, and electric vehicles are presented as examples of:",
+        options: [
+          "High-cost gadgets that increase toxic atmospheric emissions.",
+          "Inventions demonstrating that science can function with green energy.",
+          "Outdated machines that should be replaced by gas engines.",
+          "Technologies that cannot be integrated into modern corporations.",
+          "Expensive products that harm wildlife ecosystems."
+        ],
+        correct: 1, // B
+        justification: "A alternativa correta é a B. O texto aponta que essas inovações ecológicas ('solar panels, wind turbines, and electric vehicles') provam que a ciência moderna pode operar utilizando energia limpa/verde."
+      },
+      {
+        id: 5,
+        question: "The discourse marker 'Furthermore' in the first paragraph serves the purpose of:",
+        options: [
+          "Introducing an alternative option to the reader.",
+          "Explaining the cause of historical economic growth.",
+          "Adding a new supporting argument regarding pollution.",
+          "Concluding the entire text with a final summary.",
+          "Contradicting the previous sentence in the passage."
+        ],
+        correct: 2, // C
+        justification: "A alternativa correta é a C. O conectivo 'Furthermore' (Além disso/Ademais) é um operador argumentativo de adição, utilizado para acrescentar mais um fato sobre a poluição gerada pelas indústrias."
+      },
+      {
+        id: 6,
+        question: "According to paragraph 2, how can modern recycling technologies help protect the environment?",
+        options: [
+          "By extracting valuable metals from old electronics without harming the atmosphere.",
+          "By burning toxic e-waste in open facilities near industrial cities.",
+          "By forcing consumers to purchase new devices every six months.",
+          "By stopping the manufacturing of all green energy infrastructure.",
+          "By storing damaged smartphones in deep underground ocean trenches."
+        ],
+        correct: 0, // A
+        justification: "A alternativa correta é a A. O texto menciona que as empresas estão desenvolvendo tecnologias de reciclagem capazes de extrair metais valiosos de eletrônicos antigos sem prejudicar a atmosfera."
+      },
+      {
+        id: 7,
+        question: "What key proposal is made in the conclusion (paragraph 3) regarding technological progress?",
+        options: [
+          "Society must completely halt all scientific research.",
+          "Companies should increase electronic production regardless of impact.",
+          "Governments ought to eliminate all environmental regulations.",
+          "Consumers must stop using electricity in their homes.",
+          "Humanity must transform how high-tech devices are designed, bought, and reused."
+        ],
+        correct: 4, // E
+        justification: "A alternativa correta é a E. A conclusão enfatiza que não podemos simplesmente parar o progresso, mas sim que 'we must urgently transform how we design, buy, and reuse high-tech devices'."
+      },
+      {
+        id: 8,
+        question: "Based on the text, what action is expected specifically from governments in the third paragraph?",
+        options: [
+          "Eliminating recycling programs in urban neighborhoods.",
+          "Subsidizing companies that burn fossil fuels in factories.",
+          "Promoting excessive purchasing of single-use gadgets.",
+          "Establishing strict environmental laws and supporting clean energy research.",
+          "Banning consumers from acquiring renewable solar panels."
+        ],
+        correct: 3, // D
+        justification: "A alternativa correta é a D. Na proposta de intervenção, o texto afirma que 'governments should establish strict environmental laws and support clean energy research'."
+      },
+      {
+        id: 9,
+        question: "In paragraph 3, what responsibility is directly assigned to individual consumers?",
+        options: [
+          "Drafting new national environmental legislation.",
+          "Reducing unnecessary electronic consumption and practicing recycling.",
+          "Funding international scientific clean energy projects.",
+          "Building industrial wind turbines in residential regions.",
+          "Manufacturing eco-friendly smartphones at home."
+        ],
+        correct: 1, // B
+        justification: "A alternativa correta é a B. O texto especifica que 'consumers must reduce unnecessary electronic consumption and practice recycling'."
+      },
+      {
+        id: 10,
+        question: "What is the primary central message communicated by the entire text?",
+        options: [
+          "Technological growth is inherently evil and must be entirely abandoned.",
+          "Fossil fuels remain the only realistic choice for modern industrial production.",
+          "Sustainable innovation and responsible human action can reconcile technology and environmental preservation.",
+          "E-waste recycling is too complex and ineffective to be implemented globally.",
+          "Governments bear sole responsibility for solving global environmental crises."
+        ],
+        correct: 2, // C
+        justification: "A alternativa correta é a C. O texto articula como tese principal que a inovação responsável, aliada a leis governamentais e ao consumo consciente, permite o crescimento sustentável sem destruir o planeta."
+      }
+    ];
+
+    // State management
+    let currentIdx = 0;
+    const userAnswers = new Array(questionsData.length).fill(null); // stores selected option index
+    const checkState = new Array(questionsData.length).fill(false); // boolean array for checked state
+
+    window.onload = function() {
+      renderQuestionGrid();
+      loadQuestion(0);
+    };
+
+    // Render Lateral Question Navigator
+    function renderQuestionGrid() {
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+
+      questionsData.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `grid-btn-${idx}`;
+        
+        let statusStyle = "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200";
+        let iconHtml = `${idx + 1}`;
+
+        if (checkState[idx]) {
+          if (userAnswers[idx] === q.correct) {
+            statusStyle = "bg-emerald-500 hover:bg-emerald-600 text-white border-emerald-600 font-bold";
+            iconHtml = `<i class="fa-solid fa-check text-xs"></i> ${idx + 1}`;
+          } else {
+            statusStyle = "bg-rose-500 hover:bg-rose-600 text-white border-rose-600 font-bold";
+            iconHtml = `<i class="fa-solid fa-xmark text-xs"></i> ${idx + 1}`;
+          }
+        } else if (userAnswers[idx] !== null) {
+          statusStyle = "bg-tech-100 hover:bg-tech-200 text-tech-800 border-tech-300 font-semibold";
+        }
+
+        if (idx === currentIdx) {
+          btn.className = `p-2.5 rounded-xl border-2 text-sm flex items-center justify-center gap-1 transition shadow-sm ring-2 ring-tech-500/30 ${statusStyle}`;
+        } else {
+          btn.className = `p-2.5 rounded-xl border text-sm flex items-center justify-center gap-1 transition ${statusStyle}`;
+        }
+
+        btn.innerHTML = iconHtml;
+        btn.onclick = () => jumpToQuestion(idx);
+        grid.appendChild(btn);
+      });
+
+      updateProgress();
+    }
+
+    // Load selected question into quiz panel
+    function loadQuestion(index) {
+      currentIdx = index;
+      const q = questionsData[index];
+
+      // Update Header info
+      document.getElementById('question-number').innerText = `Question ${index + 1} of ${questionsData.length}`;
+      document.getElementById('question-text').innerText = q.question;
+
+      // Status Pill
+      const statusPill = document.getElementById('status-pill');
+      if (checkState[index]) {
+        if (userAnswers[index] === q.correct) {
+          statusPill.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+          statusPill.innerText = "Correct";
+        } else {
+          statusPill.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800";
+          statusPill.innerText = "Incorrect";
+        }
+      } else if (userAnswers[index] !== null) {
+        statusPill.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-tech-100 text-tech-800";
+        statusPill.innerText = "Selected";
+      } else {
+        statusPill.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500";
+        statusPill.innerText = "Unanswered";
+      }
+
+      // Render Options (A-E)
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+      const prefixes = ['A', 'B', 'C', 'D', 'E'];
+
+      q.options.forEach((optText, optIdx) => {
+        const isSelected = userAnswers[index] === optIdx;
+        const isChecked = checkState[index];
+        const isCorrectOpt = optIdx === q.correct;
+
+        let optionStyle = "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700";
+
+        if (isChecked) {
+          if (isCorrectOpt) {
+            optionStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-medium ring-1 ring-emerald-500";
+          } else if (isSelected && !isCorrectOpt) {
+            optionStyle = "border-rose-400 bg-rose-50 text-rose-900 font-medium";
+          } else {
+            optionStyle = "border-slate-200 bg-slate-50 text-slate-400 opacity-60";
+          }
+        } else if (isSelected) {
+          optionStyle = "border-tech-500 bg-tech-50 text-tech-900 font-medium ring-1 ring-tech-500";
+        }
+
+        const label = document.createElement('label');
+        label.className = `flex items-start p-3 sm:p-3.5 border rounded-xl cursor-pointer transition-all duration-150 ${optionStyle}`;
+        
+        label.innerHTML = `
+          <input type="radio" name="option" value="${optIdx}" ${isSelected ? 'checked' : ''} ${isChecked ? 'disabled' : ''} 
+            onchange="selectOption(${optIdx})" class="sr-only">
+          <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold mr-3 shrink-0 ${
+            isChecked && isCorrectOpt ? 'bg-emerald-500 text-white' : 
+            isChecked && isSelected && !isCorrectOpt ? 'bg-rose-500 text-white' : 
+            isSelected ? 'bg-tech-600 text-white' : 'bg-slate-100 text-slate-600'
+          }">
+            ${prefixes[optIdx]}
+          </span>
+          <span class="text-xs sm:text-sm pt-0.5 leading-relaxed">${optText}</span>
+        `;
+        container.appendChild(label);
+      });
+
+      // Render Feedback Box
+      const feedbackBox = document.getElementById('feedback-box');
+      if (checkState[index]) {
+        feedbackBox.classList.remove('hidden');
+        if (userAnswers[index] === q.correct) {
+          feedbackBox.className = "p-4 rounded-xl border border-emerald-200 bg-emerald-50/80 text-emerald-900 text-sm";
+          feedbackBox.innerHTML = `
+            <div class="flex items-center gap-2 font-bold mb-1 text-emerald-800">
+              <i class="fa-solid fa-circle-check text-emerald-600"></i> Resposta Correta!
+            </div>
+            <p class="text-slate-700 text-xs sm:text-sm mt-1">${q.justification}</p>
+          `;
+        } else {
+          feedbackBox.className = "p-4 rounded-xl border border-rose-200 bg-rose-50/80 text-rose-900 text-sm";
+          feedbackBox.innerHTML = `
+            <div class="flex items-center gap-2 font-bold mb-1 text-rose-800">
+              <i class="fa-solid fa-circle-xmark text-rose-600"></i> Resposta Incorreta
+            </div>
+            <p class="text-xs sm:text-sm text-slate-800 mb-1">
+              <strong>Item Correto:</strong> <span class="text-emerald-700 font-semibold">${prefixes[q.correct]}) ${q.options[q.correct]}</span>
+            </p>
+            <p class="text-xs sm:text-sm text-slate-700 mt-2 pt-2 border-t border-rose-200/60">
+              <strong>Justificativa (em Português):</strong> ${q.justification}
+            </p>
+          `;
+        }
+      } else {
+        feedbackBox.classList.add('hidden');
+      }
+
+      // Update Button States
+      document.getElementById('btn-prev').disabled = (index === 0);
+      document.getElementById('btn-next').disabled = (index === questionsData.length - 1);
+      
+      const checkBtn = document.getElementById('btn-check');
+      checkBtn.disabled = userAnswers[index] === null || checkState[index];
+
+      renderQuestionGrid();
+    }
+
+    // Select Option handler
+    function selectOption(optIdx) {
+      if (checkState[currentIdx]) return;
+      userAnswers[currentIdx] = optIdx;
+      loadQuestion(currentIdx);
+    }
+
+    // Check Answer handler
+    function checkAnswer() {
+      if (userAnswers[currentIdx] === null || checkState[currentIdx]) return;
+      checkState[currentIdx] = true;
+      loadQuestion(currentIdx);
+    }
+
+    // Navigation Controls
+    function navigateQuestion(direction) {
+      const newIdx = currentIdx + direction;
+      if (newIdx >= 0 && newIdx < questionsData.length) {
+        loadQuestion(newIdx);
+      }
+    }
+
+    function jumpToQuestion(idx) {
+      loadQuestion(idx);
+    }
+
+    // Progress bar and score status
+    function updateProgress() {
+      const answeredCount = checkState.filter(Boolean).length;
+      const correctCount = userAnswers.reduce((acc, ans, idx) => {
+        return checkState[idx] && ans === questionsData[idx].correct ? acc + 1 : acc;
+      }, 0);
+
+      const percent = (answeredCount / questionsData.length) * 100;
+      document.getElementById('progress-bar').style.width = `${percent}%`;
+      document.getElementById('progress-text').innerText = `${answeredCount} / ${questionsData.length} Answered`;
+      document.getElementById('score-badge').innerText = `Score: ${correctCount}/${questionsData.length}`;
+    }
+  </script>
+</body>
+</html>
